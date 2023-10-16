@@ -10,6 +10,9 @@
         <li><div class="movie-title">{{movie['name']}}</div></li>
         <li><div class="movie-director">{{movie['director']}}</div></li>
         <li><div class="movie-year">{{movie['year']}}</div></li>
+        <form action="/users/{{ user_id }}/delete_movie/{{ key }}" method="get">
+            <input type="submit" value="Delete Movie">
+        </form>
     </ul>
 </div>
 {% endfor %}
