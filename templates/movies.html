@@ -1,0 +1,20 @@
+<html>
+<head>
+    <title>My Movie App</title>
+</head>
+<body>
+{% for key, movie in user_movies.items() %}
+<div class="list-movies-info">
+    <ul class="movie-grid">
+        <li><div class="movie"><img class="movie-poster" src={{movie['poster']}}></div></li>
+        <li><div class="movie-title">{{movie['name']}}</div></li>
+        <li><div class="movie-director">{{movie['director']}}</div></li>
+        <li><div class="movie-year">{{movie['year']}}</div></li>
+    </ul>
+</div>
+{% endfor %}
+<form action="/users/{{ user_id }}/add_movie_form" method="get">
+    <input type="submit" value="Add Movie">
+</form>
+</body>
+</html>

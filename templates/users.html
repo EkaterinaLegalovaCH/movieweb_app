@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users - MovieWeb App</title>
+</head>
+<body>
+    <h1>Users</h1>
+    <div>
+                {% for user in users_info %}
+                <ul class="users">
+                <li class="user"><a href="/users/{{user['id']}}">{{user['name']}}</a></li>
+                </ul>
+                {% endfor %}
+    </div>
+</body>
+</html>
