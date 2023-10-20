@@ -13,6 +13,9 @@
         <form action="/users/{{ user_id }}/delete_movie/{{ key }}" method="get">
             <input type="submit" value="Delete Movie">
         </form>
+        <form action="/users/{{ user_id }}/update_movie_form/{{ key }}" method="get">
+            <input type="submit" value="Update Movie">
+        </form>
     </ul>
 </div>
 {% endfor %}
