@@ -8,18 +8,29 @@ data_manager = JSONDataManager("data/data.json")
 
 @app.route('/')
 def home():
+    """
+    endpoint for a home page
+    :return: greeting on a home page
+    """
     return "Welcome to MovieWeb App!"
 
 
 @app.route('/users')
 def list_users():
+    """
+    endpoint for a list of users
+    :return: HTML page with a list of users
+    """
     users = data_manager.get_all_users()
-    print(users)
     return render_template('users.html', users_info=users)
 
 
 @app.route('/users/add_user', methods=['GET', 'POST'])
 def add_user():
+    """
+    Check if request method is POST, implement function to add user, then redirect
+    to HTML page with list of users
+    """
     if request.method == 'POST':
         name = request.form.get('name')
         data_manager.add_user(name=name)
@@ -33,16 +44,28 @@ def add_user_form():
 
 @app.route('/users/<string:user_id>')
 def user_movies(user_id):
+    """
+    After clicking on user's name(link), implement function,
+    getting list of user's movies, and create an HTML page with those movies
+    :param user_id:
+    :return: HTML page movies.html
+    """
     movies = data_manager.get_user_movies(user_id=user_id)
     return render_template('movies.html', user_movies=movies, user_id=user_id)
 
 
 @app.route('/users/<string:user_id>/add_movie', methods=["GET", "POST"])
 def add_movie(user_id):
-    if request.method == "POST":  # Check if the request method is POST
+    """
+    Check if request method is POST, implement function to add movie ,
+    then create HTML page with list of movies
+    """
+    if request.method == "POST":
         name = request.form.get('name')
-        data_manager.add_user_movie(user_id=user_id, title=name)
-
+        try:                      # if title of movie doesn't exist in data OMDb API, raise exception
+            data_manager.add_user_movie(user_id=user_id, title=name)
+        except KeyError as e:
+            print("A KeyError occurred", str(e))
     return redirect(url_for('user_movies', user_id=user_id))
 
 
@@ -82,6 +105,11 @@ def update_movie_form(user_id, movie_id):
 def delete_movie(user_id, movie_id):
     data_manager.delete_user_movie(user_id=user_id, movie_id=movie_id)
     return redirect(url_for('user_movies', user_id=user_id))
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':
