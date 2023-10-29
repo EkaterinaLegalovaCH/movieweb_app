@@ -4,6 +4,7 @@ from DataManager.json_data_manager import JSONDataManager
 
 app = Flask(__name__)
 data_manager = JSONDataManager("data/data.json")
+app.static_folder = 'static'
 
 
 @app.route('/')
@@ -40,6 +41,12 @@ def add_user():
 @app.route('/users/add_user_form', methods=["GET", "POST"])
 def add_user_form():
     return render_template('add_user.html')
+
+
+@app.route('/users/delete_user/<string:user_id>', methods=["GET", "POST"])
+def delete_user(user_id):
+    data_manager.delete_user(user_id=user_id)
+    return redirect(url_for('list_users'))
 
 
 @app.route('/users/<string:user_id>')
@@ -101,7 +108,7 @@ def update_movie_form(user_id, movie_id):
     return render_template('update_movie.html', user_id=user_id, movie_id=movie_id, movie_details=movie_details)
 
 
-@app.route('/users/<string:user_id>/delete_movie/<string:movie_id>')
+@app.route('/users/<string:user_id>/delete_movie/<string:movie_id>', methods=["GET", "POST"])
 def delete_movie(user_id, movie_id):
     data_manager.delete_user_movie(user_id=user_id, movie_id=movie_id)
     return redirect(url_for('user_movies', user_id=user_id))
@@ -110,6 +117,9 @@ def delete_movie(user_id, movie_id):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
+app.static_folder = 'static'
 
 
 if __name__ == '__main__':

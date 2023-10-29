@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Add User Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <form action="/users/add_user" method="post">
   <label for="name">Name</label>
     <input type="text" id="name" name="name"><br>
-    <input type="submit" value="Add User">
+    <input class="button" type="submit" value="Add User">
 </form>
 </body>
 </html>

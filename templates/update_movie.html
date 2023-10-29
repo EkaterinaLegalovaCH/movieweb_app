@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Update Movie Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <form action="/users/{{ user_id }}/update_movie/{{ movie_id }}" method="post">
@@ -18,7 +19,7 @@
   <label for="rating">Rating</label>
     <input type="text" id="rating" name="rating" value="{{ movie_details['rating'] }}"><br>
 
-  <input type="submit" value="Update Movie">
+  <input class="button" type="submit" value="Update Movie">
 
 </form>
 </body>

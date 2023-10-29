@@ -40,6 +40,17 @@ class JSONDataManager(DataManagerInterface):
             print(f"User {name} was successfully added!")
             return
 
+    def delete_user(self, user_id):
+        with open(self.filename, "r") as handle:
+            users_data = handle.read()
+            users_dict = json.loads(users_data)
+        if str(user_id) in users_dict.keys():
+            del users_dict[user_id]
+            new_data = json.dumps(users_dict)
+            with open(self.filename, "w") as handle:
+                handle.write(new_data)
+                print(f"user{user_id} was successfully deleted!")
+                return
 
     def get_user_movies(self, user_id):
         with open(self.filename, "r") as handle:

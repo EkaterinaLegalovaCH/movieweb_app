@@ -1,26 +1,31 @@
 <html>
 <head>
     <title>My Movie App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-{% for key, movie in user_movies.items() %}
 <div class="list-movies-info">
-    <ul class="movie-grid">
-        <li><div class="movie"><img class="movie-poster" src={{movie['poster']}}></div></li>
-        <li><div class="movie-title">{{movie['name']}}</div></li>
-        <li><div class="movie-director">{{movie['director']}}</div></li>
-        <li><div class="movie-year">{{movie['year']}}</div></li>
+    {% for key, movie in user_movies.items() %}
+    <div class="movie">
+        <img class="movie-poster" src="{{ movie['poster'] }}">
+        <div class="movie-details">
+            <div class="movie-title">{{ movie['name'] }}</div>
+            <div class="movie-director">{{ movie['director'] }}</div>
+            <div class="movie-year">{{ movie['year'] }}</div>
+        </div>
         <form action="/users/{{ user_id }}/delete_movie/{{ key }}" method="get">
-            <input type="submit" value="Delete Movie">
+            <input class="small-button" type="submit" value="Delete Movie">
         </form>
         <form action="/users/{{ user_id }}/update_movie_form/{{ key }}" method="get">
-            <input type="submit" value="Update Movie">
+            <input class="small-button" type="submit" value="Update Movie">
         </form>
-    </ul>
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
+<div class="buttons">
 <form action="/users/{{ user_id }}/add_movie_form" method="get">
-    <input type="submit" value="Add Movie">
+    <input class="button" type="submit" value="Add Movie">
 </form>
+</div>
 </body>
 </html>
