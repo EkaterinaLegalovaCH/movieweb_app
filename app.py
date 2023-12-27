@@ -1,9 +1,18 @@
 from flask import Flask, render_template, redirect, url_for, request
 from DataManager.json_data_manager import JSONDataManager
+from DataManager.sqlite_data_manager import SQLiteDataManager
+from data_models import db, Movie, User
+from sqlalchemy import or_
+import os
+
+app = Flask(__name__, instance_path=os.path.abspath('data'))
+"""data_manager = JSONDataManager("data/data.json")
+"""
+
+data_manager = SQLiteDataManager()
+data_manager.init_app(app)
 
 
-app = Flask(__name__)
-data_manager = JSONDataManager("data/data.json")
 app.static_folder = 'static'
 
 
@@ -119,8 +128,12 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-app.static_folder = 'static'
 
+
+"""
+with app.app_context():
+    db.create_all()
+"""
 
 if __name__ == '__main__':
     app.run(debug=True)
