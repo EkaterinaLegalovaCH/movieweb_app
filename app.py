@@ -1,11 +1,15 @@
 from flask import Flask, render_template, redirect, url_for, request
 from DataManager.json_data_manager import JSONDataManager
 from DataManager.sqlite_data_manager import SQLiteDataManager
-from data_models import db, Movie, User
-from sqlalchemy import or_
 import os
+from api import user_blueprint
+
+
 
 app = Flask(__name__, instance_path=os.path.abspath('data'))
+app.register_blueprint(user_blueprint, url_prefix='/user')
+
+
 """data_manager = JSONDataManager("data/data.json")
 """
 
@@ -24,15 +28,14 @@ def home():
     """
     return "Welcome to MovieWeb App!"
 
-
+"""
 @app.route('/users')
 def list_users():
-    """
-    endpoint for a list of users
-    :return: HTML page with a list of users
-    """
     users = data_manager.get_all_users()
     return render_template('users.html', users_info=users)
+"""
+
+
 
 
 @app.route('/users/add_user', methods=['GET', 'POST'])
@@ -44,7 +47,7 @@ def add_user():
     if request.method == 'POST':
         name = request.form.get('name')
         data_manager.add_user(name=name)
-    return redirect(url_for('list_users'))
+    return redirect(url_for('user.get_users'))
 
 
 @app.route('/users/add_user_form', methods=["GET", "POST"])
@@ -55,19 +58,16 @@ def add_user_form():
 @app.route('/users/delete_user/<string:user_id>', methods=["GET", "POST"])
 def delete_user(user_id):
     data_manager.delete_user(user_id=user_id)
-    return redirect(url_for('list_users'))
+    return redirect(url_for('user.get_users'))
 
-
+"""
 @app.route('/users/<string:user_id>')
 def user_movies(user_id):
-    """
-    After clicking on user's name(link), implement function,
-    getting list of user's movies, and create an HTML page with those movies
-    :param user_id:
-    :return: HTML page movies.html
-    """
     movies = data_manager.get_user_movies(user_id=user_id)
-    return render_template('movies.html', user_movies=movies, user_id=user_id)
+    reviews = data_manager.get_reviews()
+    return render_template('movies.html', user_movies=movies, reviews=reviews, user_id=user_id)
+"""
+
 
 
 @app.route('/users/<string:user_id>/add_movie', methods=["GET", "POST"])
@@ -82,7 +82,7 @@ def add_movie(user_id):
             data_manager.add_user_movie(user_id=user_id, title=name)
         except KeyError as e:
             print("A KeyError occurred", str(e))
-    return redirect(url_for('user_movies', user_id=user_id))
+    return redirect(url_for('user.user_movies', user_id=user_id))
 
 
 @app.route('/users/<string:user_id>/add_movie_form', methods=["GET", "POST"])
@@ -107,7 +107,7 @@ def update_movie(user_id, movie_id):
             rating=rating
         )
 
-    return redirect(url_for('user_movies', user_id=user_id))
+    return redirect(url_for('user.user_movies', user_id=user_id))
 
 
 @app.route('/users/<string:user_id>/update_movie_form/<string:movie_id>', methods=["GET", "POST"])
@@ -120,7 +120,29 @@ def update_movie_form(user_id, movie_id):
 @app.route('/users/<string:user_id>/delete_movie/<string:movie_id>', methods=["GET", "POST"])
 def delete_movie(user_id, movie_id):
     data_manager.delete_user_movie(user_id=user_id, movie_id=movie_id)
-    return redirect(url_for('user_movies', user_id=user_id))
+    return redirect(url_for('user.user_movies', user_id=user_id))
+
+
+@app.route('/users/<string:user_id>/add_review/<string:movie_id>', methods=["GET", "POST"])
+def add_review(user_id, movie_id):
+    if request.method == "POST":
+        user_id = int(user_id)
+        movie_id = int(movie_id)
+        review_text = request.form.get('review_text')
+        review_rating = request.form.get('review_rating')
+        data_manager.add_review(
+            user_id=user_id,
+            movie_id=movie_id,
+            review_text=review_text,
+            review_rating=review_rating
+        )
+
+    return redirect(url_for('user.user_movies', user_id=user_id))
+
+
+@app.route('/users/<string:user_id>/add_review_form/<string:movie_id>', methods=["GET", "POST"])
+def add_review_form(user_id, movie_id):
+    return render_template('reviews.html', user_id=user_id, movie_id=movie_id)
 
 
 @app.errorhandler(404)
@@ -128,12 +150,6 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-
-
-"""
-with app.app_context():
-    db.create_all()
-"""
-
 if __name__ == '__main__':
     app.run(debug=True)
+

@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 
 
 class DataManagerInterface(ABC):
+    @abstractmethod
+    def init_app(self, app):
+        pass
 
     @abstractmethod
     def get_all_users(self):
@@ -30,3 +33,5 @@ class DataManagerInterface(ABC):
     @abstractmethod
     def delete_user_movie(self, user_id, movie_id):
         pass
+
+

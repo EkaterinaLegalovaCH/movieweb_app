@@ -29,3 +29,16 @@ class User(db.Model):
 
     def __repr__(self):
         return f"User(user_id = {self.user_id}, user's name is {self.user_name})."
+
+
+class Review(db.Model):
+    __tablename__ = 'reviews'
+
+    review_id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
+    movie_id = Column(Integer, ForeignKey('movies.movie_id'), nullable=False)
+    review_text = Column(String, nullable=False)
+    review_rating = Column(Float, nullable=False)
+
+    def __repr__(self):
+        return f"Review(review_id = {self.review_id})."

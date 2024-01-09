@@ -1,30 +1,37 @@
 <html>
 <head>
     <title>My Movie App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-<div class="list-movies-info">
+<div class="d-inline-flex p-2 bd-highlight">
     {% for key, movie in user_movies.items() %}
-    <div class="movie">
+    <div class="form-group">
         <img class="movie-poster" src="{{ movie['poster'] }}">
         <div class="movie-details">
             <div class="movie-title">{{ movie['name'] }}</div>
             <div class="movie-director">{{ movie['director'] }}</div>
             <div class="movie-year">{{ movie['year'] }}</div>
+            {% if key in reviews and 'review' in reviews[key] %}
+                <div class="movie-details">Review: {{ reviews[key]['review'] }}</div>
+                <div class="movie-details">Rating: {{ reviews[key]['rating'] }}</div>
+            {% endif %}
         </div>
         <form action="/users/{{ user_id }}/delete_movie/{{ key }}" method="get">
-            <input class="small-button" type="submit" value="Delete Movie">
+            <input class="btn btn-secondary" type="submit" value="Delete Movie">
         </form>
         <form action="/users/{{ user_id }}/update_movie_form/{{ key }}" method="get">
-            <input class="small-button" type="submit" value="Update Movie">
+            <input class="btn btn-secondary" type="submit" value="Update Movie">
+        </form>
+        <form action="/users/{{ user_id }}/add_review_form/{{ key }}" method="get">
+             <input class="btn btn-secondary" type="submit" value="Add Review">
         </form>
     </div>
     {% endfor %}
 </div>
 <div class="buttons">
 <form action="/users/{{ user_id }}/add_movie_form" method="get">
-    <input class="button" type="submit" value="Add Movie">
+    <input class="btn btn-primary" type="submit" value="Add Movie">
 </form>
 </div>
 </body>
