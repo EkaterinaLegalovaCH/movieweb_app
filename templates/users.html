@@ -10,7 +10,7 @@
     <div>
                 {% for user in users_info %}
                 <ul class="users">
-                    <li class="user"><a href="/user/users/{{user['id']}}">{{user['name']}}</a></li>
+                    <li class="user"><a href="/users/{{user['id']}}">{{user['name']}}</a></li>
                     <form action="/users/delete_user/{{ user['id'] }}" method="get">
                          <input class="small-button" type="submit" value="Delete User">
                     </form>
